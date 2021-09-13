@@ -3,9 +3,10 @@ package com.everis.listadecontatos.helpers
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.everis.listadecontatos.feature.listacontatos.model.ContatosVO
 
 class HelperDB(
-    context: Context?,
+    context: Context?
 ) : SQLiteOpenHelper(context, NOME_DO_BANCO, null, VERSAO_ATUAL) {
 
     companion object {
@@ -26,13 +27,29 @@ class HelperDB(
             ")"
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(DROP_TABLE)
+        db?.execSQL(CREATE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         if(oldVersion != newVersion){
             db?.execSQL(DROP_TABLE)
         }
+    }
+
+    fun buscarContatos(busca:String): List<ContatosVO>{
+        val db = readableDatabase ?: return mutableListOf()
+        var lista = mutableListOf<ContatosVO>()
+        val sql = "SELECT * FROM $TABLE_NAME"
+        var cursor = db.rawQuery(sql, arrayOf()) ?: return mutableListOf()
+        while (cursor.moveToNext()){
+            var contato = ContatosVO(
+                cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_NOME)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_TELEFONE))
+            )
+            lista.add(contato)
+        }
+        return lista
     }
 
 }
