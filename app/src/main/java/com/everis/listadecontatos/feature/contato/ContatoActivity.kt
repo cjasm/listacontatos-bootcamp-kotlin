@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.everis.listadecontatos.R
+import com.everis.listadecontatos.application.ContatoApplication
 import com.everis.listadecontatos.bases.BaseActivity
 import com.everis.listadecontatos.feature.listacontatos.model.ContatosVO
 import com.everis.listadecontatos.singleton.ContatoSingleton
@@ -28,8 +29,11 @@ class ContatoActivity : BaseActivity() {
             btnExcluirContato.visibility = View.GONE
             return
         }
-        etNome.setText(ContatoSingleton.lista[index].nome)
-        etTelefone.setText(ContatoSingleton.lista[index].telefone)
+        var lista = ContatoApplication.instance.helperDB?.buscarContatos("$index",true) ?: return
+        var contato = lista.getOrNull(0) ?: return
+
+        etNome.setText(contato.nome)
+        etTelefone.setText(contato.telefone)
     }
 
     private fun onClickSalvarContato(){
@@ -41,7 +45,7 @@ class ContatoActivity : BaseActivity() {
             telefone
         )
         if(index == -1) {
-            ContatoSingleton.lista.add(contato)
+            ContatoApplication.instance.helperDB?.salvarContato(contato)
         }else{
             ContatoSingleton.lista.set(index,contato)
         }

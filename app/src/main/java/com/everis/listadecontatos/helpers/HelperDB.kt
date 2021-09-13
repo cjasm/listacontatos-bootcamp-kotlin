@@ -37,14 +37,15 @@ class HelperDB(
         }
     }
 
-    fun buscarContatos(busca:String): List<ContatosVO>{
-//        salvarContato(ContatosVO(0, "Claudio", "1234-1234"))
-//        salvarContato(ContatosVO(0, "Eyshila", "1234-1234"))
-//        salvarContato(ContatosVO(0, "Jussara", "1234-1234"))
-//        salvarContato(ContatosVO(0, "Carol", "1234-1234"))
+    fun buscarContatos(busca: String, isBuscaPorID: Boolean=false): List<ContatosVO>{
         val db = readableDatabase ?: return mutableListOf()
         var lista = mutableListOf<ContatosVO>()
-        val sql = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NOME LIKE '%$busca%'"
+        var sql: String? = null
+        if(isBuscaPorID){
+            sql = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID = $busca"
+        }else{
+            sql = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NOME LIKE '%$busca%'"
+        }
         var cursor = db.rawQuery(sql, arrayOf())
         if( cursor == null ){
             db.close()
