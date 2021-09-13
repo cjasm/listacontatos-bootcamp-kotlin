@@ -1,6 +1,5 @@
 package com.everis.listadecontatos.helpers
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -78,6 +77,20 @@ class HelperDB(
 //        content.put(COLUMN_TELEFONE, contato.telefone)
 //        db.insert(TABLE_NAME, null, content)
 //        db.close()
+    }
+
+    fun deletarContato(id:Int){
+        val db = writableDatabase ?: return
+        val where = "id = ?"
+        val args = arrayOf("$id")
+        db.delete(TABLE_NAME, where, args)
+    }
+
+    fun editarContato(contato: ContatosVO){
+        val db = writableDatabase ?: return
+        val sql = "UPDATE $TABLE_NAME SET $COLUMN_NOME = ?, $COLUMN_TELEFONE = ? WHERE $COLUMN_ID = ?"
+        val args = arrayOf(contato.nome, contato.telefone, contato.id)
+        db.execSQL(sql, args)
     }
 
 }
