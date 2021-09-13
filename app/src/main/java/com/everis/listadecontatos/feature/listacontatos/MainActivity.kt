@@ -35,8 +35,7 @@ class MainActivity : BaseActivity() {
 
     private fun setupListView(){
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = ContatoAdapter(this,ContatoSingleton.lista) {onClickItemRecyclerView(it)}
-        recyclerView.adapter = adapter
+
     }
 
     private fun geraListaDeContatos(){
@@ -47,7 +46,7 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        adapter?.notifyDataSetChanged()
+        onClickBuscar()
     }
 
     private fun onClickAdd(){
